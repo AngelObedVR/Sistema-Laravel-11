@@ -10,9 +10,9 @@
         <div class="card">
         <div class="card-header">
             <h5 class="m-0">Categorías 
-                <button class="btn btn-primary" onclick="nuevo()"><i class="fas fa-file"></i> Nuevo</button> 
-                <a href=""
-                    class="btn btn-success"><i class="fas fa-file-csv"></i> CSV</a>
+                {{-- <button class="btn btn-primary" id="btnNew"><i class="fas fa-file"></i> Nuevo</button>  --}}
+                <button class="btn btn-primary" onclick="newR()" id="btnNew"><i class="fas fa-file"></i> Nuevo</button> 
+                <a href="" class="btn btn-success"><i class="fas fa-file-csv"></i> CSV</a>
             </h5>
         </div>
         <div class="card-body">
@@ -47,10 +47,16 @@
                         <td>{{$reg->image}}</td>
                         <td>{{$reg->active?'Activo':'Inactivo'}}</td>
                         <td>
+                            {{-- <button type="button" class="btn btn-warning btn-sm editar edit" >
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button type="button" class="btn btn-danger btn-sm eliminar delete">
+                                <i class="fas fa-trash"></i>
+                            </button> --}}
                             <button type="button" class="btn btn-warning btn-sm editar" onclick="edit({{$reg->id}})">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button type="button" class="btn btn-danger btn-sm eliminar" onclick="delete({{$reg->id}})">
+                            <button type="button" class="btn btn-danger btn-sm eliminar" onclick="del({{$reg->id}})">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </td>
@@ -78,72 +84,90 @@
 <!--FIN MODAL UPDATE-->
 <!--FIN CONTENIDO-->
 @endsection()
+
+
+
 @push('scripts')
-    <script>
-        function nuevo(){
+<script>
+    /* $(document).ready(function() {
+        $("#btnNew").on("click", function(){
+            newR();
+        });
+        $(".edit").on("click", function(){
+            var id = $(this).closest('tr').find('td:first').text();
+            edit(id);
+        });
+        $(".delete").on("click", function(){
+            var id = $(this).closest('tr').find('td:first').text();
+            del(id);
+        });
+    }); */
+
+    function newR(){
+        $.ajax({
+            method: 'get',
+            url: `{{url('category/create')}}`,
+            success: function(res){
+                $('#modal-update').find('.modal-dialog').html(res);
+                $("#modal-title").text("Nuevo");
+                $("#textoBoton").text("Guardar");
+                $("#modal-update").modal("show");
+                //save();
+            }
+        })
+    }
+    function edit(id){
+        $.ajax({
+            method: 'get',
+            url: `{{url('category')}}/${id}/edit`,
+            success: function(res){
+                $('#modal-update').find('.modal-dialog').html(res);
+                $("#textoBoton, #modal-title").text("Actualizar");
+                $("#modal-update").modal("show");
+                //save();
+            }
+        })
+    }
+    function save(){
+        $('#formUpdate').on('submit',function(e){
+            //e.preventDefault();
+            const _form= this;
+            const formData=new FormData(_form);
+            const url= this.getAttribute('action');
             $.ajax({
-                method: 'get',
-                url: `{{url('category/create')}}`,
+                method: 'POST',
+                url,
+                headers:{
+                    'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
+                },
+                data: formData,
+                processData: false,
+                contentType: false,
                 success: function(res){
-                    $('#modal-update').find('.modal-dialog').html(res);
-                    $("#modal-title").text("Nuevo");
-                    $("#textoBoton").text("Guardar");
-                    $("#modal-update").modal("show");
-                    //save();
-                }
-            })
-        }
-        function edit(id){
-            $.ajax({
-                method: 'get',
-                url: `{{url('category')}}/${id}/edit`,
-                success: function(res){
-                    $('#modal-update').find('.modal-dialog').html(res);
-                    $("#textoBoton, #modal-title").text("Actualizar");
-                    $("#modal-update").modal("show");
-                    //save();
-                }
-            })
-        }
-        function save(){
-            $('#formUpdate').on('submit',function(e){
-                //e.preventDefault();
-                const _form= this;
-                const formData=new FormData(_form);
-                const url= this.getAttribute('action');
-                $.ajax({
-                    method: 'POST',
-                    url,
-                    headers:{
-                        'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
-                    },
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(res){
-                    $('#modal-update').modal("hide");
-                    Swal.fire({
-                        icon: res.status,
-                        title: res.message,
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                    },
-                    error: function (res){
-                        let errors = res.responseJSON?.errors;
-                        $(_form).find(`[name]`).removeClass('is-invalid');
-                        $(_form).find('.invalid-feedback').remove();
-                        if(errors){
-                            for(const [key, value] of Object.entries(errors)){
-                                $(_form).find(`[name='${key}']`).addClass('is-invalid')
-                                $(_form).find(`#msg_${key}`).parent().append(`<span class="invalid-feedback">${value}</span>`);
-                            }
+                $('#modal-update').modal("hide");
+                Swal.fire({
+                    icon: res.status,
+                    title: res.message,
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                },
+                error: function (res){
+                    let errors = res.responseJSON?.errors;
+                    $(_form).find(`[name]`).removeClass('is-invalid');
+                    $(_form).find('.invalid-feedback').remove();
+                    if(errors){
+                        for(const [key, value] of Object.entries(errors)){
+                            $(_form).find(`[name='${key}']`).addClass('is-invalid')
+                            $(_form).find(`#msg_${key}`).parent().append(`<span class="invalid-feedback">${value}</span>`);
                         }
                     }
-                });
-            })
-        }
-        function delete(id) {
+                }
+            });
+        })
+    }
+    function del(id) {
+        console.log(id)
         Swal.fire({
             title: 'Eliminar registro',
             text: "¿Esta seguro de querer eliminar el registro?",
@@ -153,29 +177,30 @@
             cancelButtonColor: '#d33',
             confirmButtonText: 'Si',
             cancelButtonText: 'No'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        method: 'DELETE',
-                        url: `{{url('categoria')}}/${id}`,
-                        headers:{
-                        'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
-                        },
-                        success: function(res){
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    method: 'DELETE',
+                    url: `{{url('category')}}/${id}`,
+                    headers:{
+                    'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(res){
+                        Swal.fire({
+                            icon: res.status,
+                            title: res.message,
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
                             window.location.reload();
-                            Swal.fire({
-                                icon: res.status,
-                                title: res.message,
-                                showConfirmButton: false,
-                                timer: 1500
-                            });
-                        },
-                        error: function (res){
+                        });
+                    },
+                    error: function (res){
 
-                        }
-                    });
-                }
-            })
-        }
-    </script>
+                    }
+                });
+            }
+        })
+    }
+</script>
 @endpush

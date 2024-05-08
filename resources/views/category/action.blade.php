@@ -14,7 +14,7 @@
             @csrf
             <div class="form-group">
                 <label for="nombre">Nombre</label>
-                <input type="text" class="form-control" id="nombre" placeholder="Ingrese nombre" name="nombre">
+                <input type="text" class="form-control" id="nombre" placeholder="Ingrese nombre" name="nombre" value="{{$category->name}}">
                 <div id="msg_nombre"></div>
             </div>
         </div>

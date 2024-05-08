@@ -24,14 +24,14 @@ class CategoryRequest extends FormRequest
         switch ($this->method()) {
             case 'POST':
                 return [
-                    'nombre' => 'required|unique:categorias|max:70',
+                    'nombre' => 'required|unique:categories|max:70',
                     'imagen' => 'max:70',
                 ];
             case 'PUT':
             case 'PATCH':
             {
                 return [
-                    'nombre' => 'required|unique:categorias,nombre,'.$this->get('id').'|max:70',
+                    'nombre' => 'required|unique:categories,name,'.$this->get('id').'|max:70',
                     'imagen' => 'max:70',
                 ];
             }
