@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Http\Requests\CategoryRequest;
 
 class CategoryController extends Controller
 {
@@ -24,7 +25,9 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('category.create');
+        //return view('category.create');
+        $category = new Category();
+        return view('category.action',['category'=>new Category()]);
     }
 
     /**
@@ -33,10 +36,15 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $registro = new Category();
-        $registro->name=$request->input('name');
-        $registro->image=str_replace(' ','',$request->input('image').'.png');
+        $registro->name=$request->input('nombre');
+        /* $registro->image= $request->input('image') ? str_replace(' ','',$request->input('image').'.png') : "img.png"; */
+        $registro->image=  "img.png";
         $registro->save();
-        return redirect()->route('category.index');
+        //return redirect()->route('category.index');
+        return response()->json([
+            'status'=> 'success',
+            'message'=> 'Record created successfully'
+        ]);
     }
 
     /**
@@ -50,24 +58,37 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Category $category)
+    public function edit($id)
     {
-        //
+        $category = Category::findOrFail($id);
+        return view('category.action',compact('category'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Category $category)
+    public function update(CategoryRequest $request, $id)
     {
-        //
+        $category = Category::findOrFail($id);
+        $category->name=$request->nombre;
+        $category->save();
+        return response()->json([
+            "status"=> "success",
+            "message"=> "Updated successfully"
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Category $category)
+    public function destroy($id)
     {
-        //
+        $category = Category::findOrFail($id);
+        $category->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => $category->name . ' Eliminado'
+        ]);
     }
 }
