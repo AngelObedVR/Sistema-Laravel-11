@@ -130,7 +130,7 @@
     }
     function save(){
         $('#formUpdate').on('submit',function(e){
-            //e.preventDefault();
+            e.preventDefault();
             const _form= this;
             const formData=new FormData(_form);
             const url= this.getAttribute('action');
@@ -144,13 +144,13 @@
                 processData: false,
                 contentType: false,
                 success: function(res){
-                $('#modal-update').modal("hide");
-                Swal.fire({
-                    icon: res.status,
-                    title: res.message,
-                    showConfirmButton: false,
-                    timer: 1500
-                });
+                    $('#modal-update').modal("hide");
+                    Swal.fire({
+                        icon: res.status,
+                        title: res.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
                 },
                 error: function (res){
                     let errors = res.responseJSON?.errors;

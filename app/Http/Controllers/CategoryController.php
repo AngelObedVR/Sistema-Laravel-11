@@ -36,9 +36,9 @@ class CategoryController extends Controller
     public function store(CategoryRequest $request)
     {
         $registro = new Category();
-        $registro->name=$request->input('nombre');
+        $registro->name=$request->input('name');
         /* $registro->image= $request->input('image') ? str_replace(' ','',$request->input('image').'.png') : "img.png"; */
-        $registro->image=  "img.png";
+        $registro->image = "img.png";
         $registro->save();
         //return redirect()->route('category.index');
         return response()->json([
@@ -67,10 +67,13 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
+
+    //public function update(CategoryRequest $request)
     public function update(CategoryRequest $request, $id)
     {
+        //$category = Category::findOrFail($request->id);
         $category = Category::findOrFail($id);
-        $category->name=$request->nombre;
+        $category->name=$request->name;
         $category->save();
         return response()->json([
             "status"=> "success",
