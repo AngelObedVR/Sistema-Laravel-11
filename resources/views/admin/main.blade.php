@@ -48,13 +48,17 @@
         <!-- Messages Dropdown Menu -->
         <li class="nav-item dropdown">
           <a class="nav-link" data-toggle="dropdown" href="#">
-            <i class="fa fa-user text-warning"></i> Angel Obed Villanueva
+            <i class="fa fa-user text-warning"></i> {{ Auth::user()->name }}
           </a>
           <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
             <a href="#" class="dropdown-item text-sm"><i class="fas fa-user-cog text-primary"></i> Perfil</a>
             <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-item dropdown-footer"><i class="fas fa-sign-out-alt text-danger"></i> Cerrar
-              sesión</a>
+            <form class="" method="POST" action="{{ route('logout') }}">
+              @csrf
+              <button type="submit" class="btn dropdown-item dropdown-footer btn-sm">
+                <i class="fas fa-sign-out-alt text-danger"></i> {{ __('Logout') }}
+              </button>
+            </form>
           </div>
         </li>
         <!-- Notifications Dropdown Menu -->
