@@ -6,6 +6,8 @@ Crear proyecto con laravel
  ```bash
     composer create-project laravel/laravel:^11.0 sistemauss
 ```
+Crear la base de datos del proyecto. Configurar `.env` y `config/database.php`.
+
 Ejecutar servidor
 ```bash
     php artisan serve
@@ -57,24 +59,24 @@ Ejecutamos las migraciones
     php artisan migrate:refresh --seed
 ```
 
-## Sesión 3
-# Si descargamos el código de github
+# Sesión 3
+## Si descargamos el código de github
 ```bash
     composer update
 ```
 
-# Si queremos ver todas las ruta
+## Si queremos ver todas las ruta
 ```bash
     php artisan route:list
 ```
-### Controladores
+## Controladores
 Crear un controlador para gestionar los recursos de la tabla categorías
 
 ```bash
     php artisan make:controller CategoriaController --resource --model=Categoria
 ```
 
-### Breeze
+## Breeze
 
 Laravel Breeze es una implementación mínima y simple de todas las funciones de autenticación de Laravel , incluido el inicio de sesión, el registro, el restablecimiento de contraseña, la verificación de correo electrónico y la confirmación de contraseña.
 
@@ -88,7 +90,7 @@ Laravel Breeze es una implementación mínima y simple de todas las funciones de
 ```
 Si aparece el menu para elegir, elegir blade.
 
-### Breeze
+## Breeze
 Error en el lado del cliente
 Click derecho y luego inspeccionar
 
@@ -106,7 +108,7 @@ Para validar vamos a utilizar un request.
     php artisan make:request CategoriaRequest
 ```
 
-### Breeze
+## Breeze
 Vamos a realizar el mantenimiento de la tabla
 tipo_comprobante
     - id
@@ -148,3 +150,27 @@ Creamos una carpeta tipo-comprobante en la carpeta resources/views
 y dentro agregamos dos archivos:
 index.blade.php
 action.blade.php
+
+
+
+# Sesión 7: Instalar el paquete de lenguajes
+
+
+## 1. Publicar el directorio lang
+ ```bash
+    php artisan lang:publish
+```
+
+## 2. Instalamos el paquete laravel Lang
+ ```bash
+    composer require laravel-lang/common --dev
+```
+
+## 3. Agregamos el idioma español
+ ```bash
+    php artisan lang:add es
+```
+## 4. Actualizamos el paquete de idiomas
+ ```bash
+    php artisan lang:update
+```

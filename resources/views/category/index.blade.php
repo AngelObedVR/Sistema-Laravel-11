@@ -150,6 +150,8 @@
                         title: res.message,
                         showConfirmButton: false,
                         timer: 1500
+                    }).then(() => {
+                        window.location.reload();
                     });
                 },
                 error: function (res){
